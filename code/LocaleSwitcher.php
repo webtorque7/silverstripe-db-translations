@@ -22,8 +22,8 @@ class LocaleSwitcher extends \FormField
             $title = 'Change editing locale';
         }
 
-        \Requirements::css('language-module/css/LocaleSwitcher.css');
-        \Requirements::javascript('language-module/js/LocaleSwitcher.js');
+        \Requirements::css('db-translations/css/LocaleSwitcher.css');
+        \Requirements::javascript('db-translations/js/LocaleSwitcher.js');
 
         parent::__construct($name, $title, $value);
     }
