@@ -1,0 +1,19 @@
+{
+    "name": "webtorque/db-translations",
+    "description": "loads translatables from yml file and creates db object that can be customised with injected words",
+    "type": "silverstripe-module",
+    "require": {
+        "silverstripe/framework": "~3.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Conrad",
+            "email": "conrad@webtorque.co.nz"
+        },
+        {
+            "name": "Carey ",
+            "email": "carey@webtorque.co.nz"
+        }
+    ]
+}

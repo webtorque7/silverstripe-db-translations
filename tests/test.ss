@@ -1,0 +1,1 @@
+<%t Recipes.MoreBeastRecipes 'More {beast} Recipes with {product}' beast=$Product.Beast.Title product=$Product.ProductName %>

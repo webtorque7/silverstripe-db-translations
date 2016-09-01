@@ -1,0 +1,58 @@
+/* line 6, ../scss/LocaleSwitcher.scss */
+.locale-switcher ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 0;
+}
+/* line 12, ../scss/LocaleSwitcher.scss */
+.locale-switcher ul li {
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 14px;
+  text-align: center;
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #1c1c1c;
+  border-left: 0;
+}
+/* line 22, ../scss/LocaleSwitcher.scss */
+.locale-switcher ul li:first-child {
+  border-left: 1px solid #1c1c1c;
+  border-radius: 4px 0 0 4px;
+}
+/* line 27, ../scss/LocaleSwitcher.scss */
+.locale-switcher ul li:last-child {
+  border-radius: 0 4px 4px 0;
+}
+/* line 31, ../scss/LocaleSwitcher.scss */
+.locale-switcher ul li.selected {
+  background-color: #1c872f;
+  color: white;
+}
+
+/* line 41, ../scss/LocaleSwitcher.scss */
+.originallang_holder .field:first-child {
+  color: green;
+}
+/* line 46, ../scss/LocaleSwitcher.scss */
+.originallang_holder .originallang label {
+  color: orangered;
+}
+/* line 53, ../scss/LocaleSwitcher.scss */
+.originallang_holder .translated-field.field label:after {
+  display: inline-block;
+  padding: 3px 5px;
+  background: #1c872f;
+  color: white;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+/* line 65, ../scss/LocaleSwitcher.scss */
+.originallang_holder .translated-field.field.zh_CN label:after {
+  content: "CN";
+}
+/* line 73, ../scss/LocaleSwitcher.scss */
+.originallang_holder .translated-field.field.de_DE label:after {
+  content: "DE";
+}
