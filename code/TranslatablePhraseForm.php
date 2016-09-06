@@ -26,7 +26,7 @@ class TranslatablePhraseForm extends CMSForm
             list($group, $key) = explode('.', $entity);
 
             $groups[$group][$key] = TextField::create($entity, $this->niceLabel($key))
-                ->setValue(TranslateService::lookup_translation($entity, Fluent::current_locale()))
+                ->setValue(TranslateService::lookup_translation($entity, TranslateLocale::current_locale()))
                 ->setDescription(TranslateService::translate($entity, $translation, 'en'));
         }
 
@@ -68,7 +68,7 @@ class TranslatablePhraseForm extends CMSForm
         $nonTranslationData = array('url', 'SecurityID', 'action_updateTranslatable', 'BackURL');
         $data = array_diff_key($data, array_flip($nonTranslationData));
 
-        $locale = Fluent::current_locale();
+        $locale = TranslateLocale::current_locale();
 
         foreach($data as $key => $value){
             //undo SilverStripe string replace

@@ -15,7 +15,7 @@ class LocaleSwitcher extends \FormField
     public function __construct($name, $title = null, $value = null, $locales = [])
     {
         $this->locales = empty($locales) ?
-            \Fluent::Config()->aliases :
+            \TranslateLocale::available_locales() :
             $locales;
 
         if (empty($title)) {
@@ -46,7 +46,7 @@ class LocaleSwitcher extends \FormField
     {
         return ($locale = \Controller::curr()->getRequest()->getVar('locale')) ?
             $locale :
-            \Fluent::current_locale();
+            \TranslateLocale::current_locale();
     }
 
     public function Field($properties = array()) {

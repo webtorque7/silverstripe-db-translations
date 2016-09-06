@@ -28,7 +28,7 @@ class TranslatablePhrase extends DataObject
         $localeSelector = DropdownField::create(
             "Locale",
             "Locale",
-            Fluent::Config()->aliases
+            TranslateLocale::available_locales()
         );
         $localeSelector->setEmptyString('All');
 

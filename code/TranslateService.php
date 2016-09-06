@@ -12,7 +12,7 @@ class TranslateService
 
     public static function translate($entity, $string, $injection = null, $locale = null)
     {
-        $currentLocale = $locale ?: Fluent::current_locale();
+        $currentLocale = $locale ?: TranslateLocale::current_locale();
 
         // if no string being passed through use string from db
         if((!$string || $string == '')){
