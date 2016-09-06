@@ -17,4 +17,8 @@ class TranslatableLocalisation implements LocalisationService
     {
         return Translatable::get_existing_content_languages();
     }
+
+    public function url_param(){
+        return 'locale';
+    }
 }

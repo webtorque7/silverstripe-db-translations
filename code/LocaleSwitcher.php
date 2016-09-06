@@ -58,6 +58,8 @@ class LocaleSwitcher extends \FormField
 
         $this->extend('onBeforeRender', $this);
 
-        return $context->renderWith('LocaleSwitcher');
+        return $context->customise(array(
+          'Param' => \TranslateLocale::url_param()
+        ))->renderWith('LocaleSwitcher');
     }
 }

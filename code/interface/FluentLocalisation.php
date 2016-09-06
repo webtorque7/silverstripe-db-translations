@@ -17,4 +17,8 @@ class FluentLocalisation implements LocalisationService
     {
         return Fluent::Config()->aliases;
     }
+
+    public function url_param(){
+        return 'l';
+    }
 }

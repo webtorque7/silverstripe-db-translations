@@ -14,7 +14,11 @@
             },
 
             redirect: function (currentUrl, locale) {
-                window.location = this.updateQueryStringParameter(currentUrl, 'l', locale);
+                var param = this.data('param');
+                if(!param || param == ''){
+                    param = 'locale';
+                }
+                window.location = this.updateQueryStringParameter(currentUrl, param, locale);
             },
 
             updateQueryStringParameter: function(uri, key, value) {

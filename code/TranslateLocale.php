@@ -19,4 +19,10 @@ class TranslateLocale extends Object
         $localisation = new $class();
         return $localisation->available_locales();
     }
+
+    public static function url_param(){
+        $class = self::config()->class;
+        $localisation = new $class();
+        return $localisation->url_param();
+    }
 }
