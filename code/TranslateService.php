@@ -10,13 +10,14 @@ class TranslateService
 {
     private static $translations = [];
 
-    public static function translate($entity, $string, $injection = null, $locale = null)
+    public static function translate($entity, $defaultString, $injection = null, $locale = null)
     {
         $currentLocale = $locale ?: TranslateLocale::current_locale();
 
         // if no string being passed through use string from db
+        $string = self::lookup_translation($entity, $currentLocale);
         if((!$string || $string == '')){
-            $string = self::lookup_translation($entity, $currentLocale);
+            $string = $defaultString;
         }
 
         // swap out variables within the string
