@@ -18,6 +18,9 @@ class TranslatablePhraseAdmin extends LeftAndMain
 
     public function getEditForm($id = null, $fields = null)
     {
+        Requirements::css('db-translations/css/TranslationsForm.css');
+        Requirements::javascript('db-translations/js/TranslationsForm.js');
+
         return $this->TranslatablePhraseForm()->addExtraClass('cms-edit-form cms-panel-padded center');
     }
 
