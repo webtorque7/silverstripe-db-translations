@@ -68,7 +68,7 @@ class TranslatablePhraseForm extends CMSForm
         $nonTranslationData = array('url', 'SecurityID', 'action_updateTranslatable', 'BackURL');
         $data = array_diff_key($data, array_flip($nonTranslationData));
 
-        $locale = TranslateLocale::current_locale();
+        $locale = $data['Locale'];
 
         foreach($data as $key => $value){
             //undo SilverStripe string replace

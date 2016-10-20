@@ -44,7 +44,7 @@ class LocaleSwitcher extends \FormField
 
     public function CurrentLocale()
     {
-        return ($locale = \Controller::curr()->getRequest()->getVar('locale')) ?
+        return ($locale = \Controller::curr()->getRequest()->getVar('Locale')) ?
             $locale :
             \TranslateLocale::current_locale();
     }
