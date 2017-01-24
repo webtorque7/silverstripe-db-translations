@@ -16,49 +16,27 @@ class TranslatablePhraseAdmin extends LeftAndMain
         'TranslatablePhraseForm'
     );
 
+    public function init()
+    {
+        parent::init();
+
+        Requirements::css('db-translations/css/TranslationsForm.css');
+    }
+
     public function getEditForm($id = null, $fields = null)
     {
-        Requirements::css('db-translations/css/TranslationsForm.css');
-        Requirements::javascript('db-translations/js/TranslationsForm.js');
-
-        return $this->TranslatablePhraseForm()->addExtraClass('cms-edit-form cms-panel-padded center');
+        return $this->TranslatablePhraseForm();
     }
 
     public function TranslatablePhraseForm()
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/mysite/lang/en.yml';
-        $array = $this->loadFieldsFromYML($path);
-        $phrases = array();
-        if (!empty($array) && isset($array['en'])) {
-            $defaultFields = $array['en'];
-            $phrases = $this->flatten($defaultFields);
-        }
 
-        $form = TranslatablePhraseForm::create($this, 'TranslatablePhraseForm', $phrases);
+
+        $form = TranslatablePhraseForm::create($this, 'TranslatablePhraseForm');
+        $form->setAttribute('data-pjax-fragment', 'CurrentForm');
+        $form->setResponseNegotiator($this->getResponseNegotiator());
+        $form->addExtraClass('cms-content center cms-edit-form');
+
         return $form;
-    }
-
-    public function loadFieldsFromYML($path)
-    {
-        if (file_exists($path)) {
-            $file = file_get_contents($path);
-            $ymlFields = sfYaml::load($file);
-
-            return $ymlFields;
-        }
-    }
-
-    public function flatten($array, $prefix = '')
-    {
-        $result = array();
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result += $this->flatten($value, $prefix . $key . '.');
-            } else {
-                $result[$prefix . $key] = $value;
-            }
-        }
-
-        return $result;
     }
 }

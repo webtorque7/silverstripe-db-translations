@@ -47,4 +47,13 @@ class TranslateService
 
         return !empty(self::$translations[$locale][$entity]) ? self::$translations[$locale][$entity] : '';
     }
+
+    /**
+     * Flush the cache for translations
+     */
+    public static function flush()
+    {
+        self::$translations = [];
+    }
+
 }

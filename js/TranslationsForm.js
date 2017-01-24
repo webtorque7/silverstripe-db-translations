@@ -9,6 +9,7 @@
                 this.closest('form').ajaxSubmit({
                     success: function (response) {
                         form.removeClass('loading');
+                        statusMessage('Translations updated');
                     }
                 });
             }

@@ -8,6 +8,8 @@
  */
 class TranslatablePhraseForm extends CMSForm
 {
+    protected $translations = [];
+
     /**
      * TranslatablePhraseForm constructor.
      * @param Controller $controller
@@ -15,30 +17,48 @@ class TranslatablePhraseForm extends CMSForm
      * @param array $translations
      * @param array $locales
      */
-    public function __construct($controller, $name = 'TranslatablePhraseForm', $translations = [], $locales = [])
+    public function __construct($controller, $name = 'TranslatablePhraseForm', $locales = [])
     {
-        $fields = FieldList::create(array(
-            Language\Fields\LocaleSwitcher::create('LocaleSwitcher')
+        $fields = FieldList::create();
+
+        $actions = FieldList::create(array(
+            FormAction::create('updateTranslatable', _t('CMSMain.SAVE', 'Save'))
+                ->setUseButtonTag(true)
+                ->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
         ));
 
+        parent::__construct($controller, $name, $fields, $actions);
+
+        $this->loadTranslations();
+        $this->populateFields();
+    }
+
+    /**
+     * Populate all the fields from the translations, resets any fields already there
+     */
+    protected function populateFields()
+    {
+        $fields = FieldList::create(TabSet::create('Root', Tab::create('Main')));
+
+        $fields->addFieldToTab('Root.Main', Language\Fields\LocaleSwitcher::create('LocaleSwitcher'));
+
         $groups = [];
-        foreach ($translations as $entity => $translation) {
+
+        TranslateService::flush();
+
+        foreach ($this->translations as $entity => $translation) {
             list($group, $key) = explode('.', $entity);
 
             $groups[$group][$key] = TextField::create($entity, $this->niceLabel($key))
                 ->setValue(TranslateService::lookup_translation($entity, TranslateLocale::current_locale()))
-                ->setDescription(TranslateService::translate($entity, $translation, 'en'));
+                ->setDescription(TranslateService::translate($entity, $translation, null, 'en'));
         }
 
         foreach ($groups as $groupName => $subFields) {
-            $fields->push(ToggleCompositeField::create($groupName, $groupName, $subFields));
+            $fields->addFieldToTab('Root.Main', ToggleCompositeField::create($groupName, $groupName, $subFields));
         }
 
-        $actions = FieldList::create(array(
-            FormAction::create('updateTranslatable', 'Update Translatable Phrases')
-        ));
-
-        parent::__construct($controller, $name, $fields, $actions);
+        $this->setFields($fields);
     }
 
     /**
@@ -47,10 +67,11 @@ class TranslatablePhraseForm extends CMSForm
      * @param $label
      * @return string
      */
-    public function niceLabel($label){
+    public function niceLabel($label)
+    {
         $parts = preg_split("/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/", $label);
 
-        if(!empty($parts)){
+        if (!empty($parts)) {
             return implode(" ", $parts);
         }
 
@@ -70,21 +91,70 @@ class TranslatablePhraseForm extends CMSForm
 
         $locale = $data['Locale'];
 
-        foreach($data as $key => $value){
-            //undo SilverStripe string replace
-            $entity = str_replace('_', '.', $key);
-            $phrase = TranslatablePhrase::get()->filter(array('Locale' => $locale, 'Entity' => $entity))->first();
-            if($phrase && $phrase->Exists()){
-                $phrase->String = $value;
-                $phrase->write();
+        try {
+            foreach ($data as $key => $value) {
+                //undo SilverStripe string replace
+                $entity = str_replace('_', '.', $key);
+                $phrase = TranslatablePhrase::get()->filter(array('Locale' => $locale, 'Entity' => $entity))->first();
+                if ($phrase) {
+                    $phrase->String = $value;
+                    $phrase->Entity = $entity;
+                    $phrase->write();
+                } else {
+                    $phrase = TranslatablePhrase::create();
+                    $phrase->Locale = $locale;
+                    $phrase->Entity = $entity;
+                    $phrase->String = $value;
+                    $phrase->write();
+                }
             }
-            else{
-                $phrase = TranslatablePhrase::create();
-                $phrase->Locale = $locale;
-                $phrase->Entity = $entity;
-                $phrase->String = $value;
-                $phrase->write();
+
+        } catch (ValidationException $ex) {
+            $this->sessionMessage($ex->getResult()->message(), 'bad');
+            return $this->getResponseNegotiator()->respond($this->controller->getRequest());
+        }
+
+        $this->controller->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
+
+        $this->populateFields();
+
+        return $this->forTemplate();
+    }
+
+    protected function loadTranslations()
+    {
+        $path = Director::baseFolder() . '/mysite/lang/en.yml';
+        $array = $this->loadFieldsFromYML($path);
+        $phrases = array();
+        if (!empty($array) && isset($array['en'])) {
+            $defaultFields = $array['en'];
+            $phrases = $this->flatten($defaultFields);
+        }
+
+        $this->translations = $phrases;
+    }
+
+    protected function loadFieldsFromYML($path)
+    {
+        if (file_exists($path)) {
+            $file = file_get_contents($path);
+            $ymlFields = sfYaml::load($file);
+
+            return $ymlFields;
+        }
+    }
+
+    protected function flatten($array, $prefix = '')
+    {
+        $result = array();
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result += $this->flatten($value, $prefix . $key . '.');
+            } else {
+                $result[$prefix . $key] = $value;
             }
         }
+
+        return $result;
     }
 }
