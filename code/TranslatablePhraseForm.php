@@ -38,8 +38,11 @@ class TranslatablePhraseForm extends CMSForm
      */
     protected function populateFields()
     {
+        $currentLocale = TranslateLocale::current_locale();
+
         $fields = FieldList::create(TabSet::create('Root', Tab::create('Main')));
 
+        $fields->push(HiddenField::create('Locale', 'Locale', $currentLocale));
         $fields->addFieldToTab('Root.Main', Language\Fields\LocaleSwitcher::create('LocaleSwitcher'));
 
         $groups = [];
@@ -50,8 +53,8 @@ class TranslatablePhraseForm extends CMSForm
             list($group, $key) = explode('.', $entity);
 
             $groups[$group][$key] = TextField::create($entity, $this->niceLabel($key))
-                ->setValue(TranslateService::lookup_translation($entity, TranslateLocale::current_locale()))
-                ->setDescription(TranslateService::translate($entity, $translation, null, 'en'));
+                ->setValue(TranslateService::lookup_translation($entity, $currentLocale))
+                ->setDescription(Convert::raw2xml(TranslateService::translate($entity, $translation, null, 'en')));
         }
 
         foreach ($groups as $groupName => $subFields) {

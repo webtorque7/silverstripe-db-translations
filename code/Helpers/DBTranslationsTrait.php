@@ -12,7 +12,7 @@ trait DBTranslationsTrait
     {
         $injection = array();
 
-        while (count($params)) {
+        if (!empty($params)) while (count($params)) {
             list($key, $value) = array_splice($params, 0, 2);
             $injection[$key] = $value;
         }
