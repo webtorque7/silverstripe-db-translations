@@ -49,6 +49,8 @@ class TranslatablePhraseForm extends CMSForm
 
         TranslateService::flush();
 
+        ksort($this->translations);
+
         foreach ($this->translations as $entity => $translation) {
             list($group, $key) = explode('.', $entity);
 
