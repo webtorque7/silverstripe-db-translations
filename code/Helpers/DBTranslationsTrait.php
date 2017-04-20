@@ -12,9 +12,15 @@ trait DBTranslationsTrait
     {
         $injection = array();
 
-        if (!empty($params)) while (count($params)) {
-            list($key, $value) = array_splice($params, 0, 2);
-            $injection[$key] = $value;
+        if (!empty($params)) {
+            if(count($params) == 1){
+                $params = $params[0];
+            }
+
+            while (count($params)) {
+                list($key, $value) = array_splice($params, 0, 2);
+                $injection[$key] = $value;
+            }
         }
 
         return TranslateService::translate($entity, $string, $injection);
